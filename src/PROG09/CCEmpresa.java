@@ -1,61 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PROG09;
 
-import static PROG09.ContaAforro.crearCAforro;
-import static PROG09.ContaAforro.crearNovaConta;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Scanner;
-
 
 public class CCEmpresa extends ContaCorriente {
 
-    protected static ArrayList<CCEmpresa> listadoCEmpresa = new ArrayList<CCEmpresa>();
-
+    // protected static ArrayList<CCEmpresa> listadoCEmpresa = new ArrayList<CCEmpresa>();
     double interesDesc; // empresa
     double maxDesc; // empresa
     double comisionDesc;
 
     //contas empresa
-    protected static ArrayList<CCEmpresa> listarEmpresa() {
-        return listadoCEmpresa;
+    protected static ArrayList<Conta> listarEmpresa() {
+        return PROG09.listadoEmpresa;
     }
 
     protected static void engadirEmpresa(CCEmpresa contaEmpresa) {
-        listadoCEmpresa.add(contaEmpresa);
-    }
-
-    protected static void mostrarContas(ArrayList<CCEmpresa> listadoCEmpresa) {
-
-        System.out.println("\n-- Contas EMPRESA: ");
-        for (int i = 0; i < listadoCEmpresa.size(); i++) {
-            System.out.println("Conta " + (i + 1) + ". ");
-            System.out.println(listadoCEmpresa.get(i).getNumCuenta());
-            System.out.println(listadoCEmpresa.get(i).getPersona());
-            System.out.println(listadoCEmpresa.get(i).getSaldo());
-            System.out.println("");
-        }
-    }
-
-    public static boolean crearNovaConta() {
-        String resposta;
-        System.out.print("Desexa introducir outra conta de empresa? ");
-
-        do {
-            System.out.print("(s/n)");
-            resposta = Ferramentas.seleccion().toLowerCase();
-        } while (!"s".equals(resposta) && !"n".equals(resposta));
-
-        return "s".equals(resposta);
+        PROG09.listadoEmpresa.add(contaEmpresa);
     }
 
     // método encargado de crear unha conta de empresa: pide os datso, valídaos etc
     public static void crearCEmpresa() throws Exception {
-        Scanner input = new Scanner(System.in);
 
         double interesDesc = 0;
         double maxDesc = 0;
@@ -65,92 +29,58 @@ public class CCEmpresa extends ContaCorriente {
         Persona persona;
         NumeroCCC numCuenta = null;
 
-        String resposta;
-
         //double comisionMant, Hashtable entidadesAutorizadas, Persona persona, double saldo, String numCuenta
-        System.out.println("---- Conta EMPRESA ----");
-        System.out.println("---- Introduce os datos ----");
-
         do {
+            System.out.println("---- Conta EMPRESA ----");
+            System.out.println("---- Introduce os datos ----");
+
             try {
                 numCuenta = NumeroCCC.crearCCC();
             } catch (Exception e) {
-                System.out.print(e.getMessage());
+                System.out.print("ERRO: *** " + e.getMessage() + " ***");
                 Erros.errosCC();
-
+                return;
             }
-        } while (numCuenta == null);
 
-        persona = Persona.crearPersoa();
+            persona = Persona.crearPersoa();
 
-        if (Pagos.engadirPagos()) {
-            entidadesAutorizadas = Pagos.crearEntidade();
-        } else {
-            entidadesAutorizadas = null;
-        }
+            if (Pagos.engadirPagos()) {
+                entidadesAutorizadas = Pagos.crearEntidade();
+            } else {
+                entidadesAutorizadas = null;
+            }
 
-        try {
-            System.out.print("Saldo total: ");
-            saldo = Ferramentas.seleccionNumeros();
+            // bloque de posibles datos numericos
+            try {
+//                System.out.print("\nSaldo total: ");
+//                saldo = Ferramentas.seleccionNumeros();
+//                if (saldo < 0 || saldo > 100000000) {
+//                    throw new Exception("O saldo debe comprender un número entre 0 e 100.000.000 (€).");
+//                }
 
-        } catch (Exception e) {
+                System.out.print("Interés por descuberto: ");
+                interesDesc = Ferramentas.seleccionNumeros();
 
-            System.out.print(e);
-            Erros.errosDatosNumericos();
-        }
-        input.nextLine();
+                System.out.print("Máximo descuberto permitido: ");
+                maxDesc = Ferramentas.seleccionNumeros();
 
-        try {
-            System.out.print("Interés por descuberto: ");
-            interesDesc = Ferramentas.seleccionNumeros();
-        } catch (Exception e) {
-            System.out.print(e);
-            Erros.errosDatosNumericos();
-        }
+                System.out.print("Comisión por descuberto: ");
+                comisionDesc = Ferramentas.seleccionNumeros();
 
-        try {
-            System.out.print("Máximo descuberto permitido: ");
-            maxDesc = Ferramentas.seleccionNumeros();
-        } catch (Exception e) {
-            System.out.print(e);
-            Erros.errosDatosNumericos();
-        }
+            } catch (Exception e) {
+                System.out.print(e);
+                Erros.errosDatosNumericos();
+            }
 
-        try {
-            System.out.print("Comisión por descuberto: ");
-            comisionDesc = Ferramentas.seleccionNumeros();
-        } catch (Exception e) {
-            System.out.print(e);
-            Erros.errosDatosNumericos();
-        }
+            CCEmpresa ccEmpresa = new CCEmpresa(interesDesc, maxDesc, comisionDesc, entidadesAutorizadas, persona, saldo, numCuenta);
+            System.out.println("\nConta creada: " + ccEmpresa);
+            engadirEmpresa(ccEmpresa);
+            System.out.println("");
+            PROG09.mostrarConta(PROG09.listadoEmpresa, "EMPRESA");
 
-        CCEmpresa ccEmpresa = new CCEmpresa(interesDesc, maxDesc, comisionDesc, entidadesAutorizadas, persona, saldo, numCuenta);
-        System.out.println("\nConta creada: " + ccEmpresa);
-        engadirEmpresa(ccEmpresa);
-        System.out.println("");
-        mostrarContas(listadoCEmpresa);
+        } while (PROG09.crearNovaConta("EMPRESA") == true);
+        System.out.println("Volvendo ó menú anterior...\n");
 
-        if (crearNovaConta()) {
-            crearCEmpresa();
-        } else {
-            System.out.println("Volvendo ó menú principal...\n");
-            Ferramentas.menu();
-        }
-        
-//        System.out.print("Desexa introducir outra conta de empresa? ");
-//
-//        do {
-//            System.out.print("(s/n)");
-//            resposta = Ferramentas.seleccion().toLowerCase();
-//        } while (!"s".equals(resposta) && !"n".equals(resposta));
-//
-//        if ("s".equals(resposta)) {
-//            crearCAforro();
-//        } else {
-//            System.out.println("Volvendo ó menú principal...\n");
-//            Ferramentas.menu();
-//        }
-//
     }
 
     // constructor

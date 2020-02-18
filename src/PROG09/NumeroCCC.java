@@ -5,7 +5,6 @@
  */
 package PROG09;
 
-import java.util.Scanner;
 
 /**
  *
@@ -36,22 +35,26 @@ public class NumeroCCC {
     // verifica si o ccc é correcto, de selo engádeo a unha lista de CCC
     protected boolean verificarCCC(String ccc) throws Exception {
 
-        if (ccc.length() != 20) //{
+        if (ccc.length() != 20) 
         {
             return false;
         }
         
-        for (int i=0; i<Ferramentas.listadoNumerosCC.size(); i++) {
-            if (ccc.equals(Ferramentas.listadoNumerosCC.get(i)))
-                return false;
-                
-        }
+        // comproba q o CCC non esté xa almacenado noutra conta da aplicación. 
+        // Comentar para usar o CCC proporcionado: 00491500051234567892
+//        for (int i=0; i<Ferramentas.listadoNumerosCC.size(); i++) {
+//            if (ccc.equals(Ferramentas.listadoNumerosCC.get(i)))
+//                return false;
+//                
+//        }
 
         if (verificarDC1(ccc) == Integer.parseInt(ccc.substring(8, 9))) {
             if (verificarDC2(ccc) == Integer.parseInt(ccc.substring(9, 10))) {
-                Ferramentas.listadoNumerosCC.add(ccc);
+                PROG09.listadoNumerosCC.add(ccc);
+                System.out.println(" -- OK!");
                 return true;
             } else {
+                System.out.println(" -- ERROR!");
                 return false;
                 
             }
@@ -65,7 +68,7 @@ public class NumeroCCC {
         int suma = 0;
         int resto = 0;
         int dc1 = 0;
-        System.out.println("Verificando: " + ccc);
+        System.out.print("Verificando: " + ccc);
 
         for (int i = 0; i < 8; i++) {
             int a = Integer.parseInt(ccc.substring(i, i + 1));

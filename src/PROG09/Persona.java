@@ -7,12 +7,8 @@ package PROG09;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
-/**
- *
- * @author Dregoth
- */
+
 class Persona {
 
     String nombre;
@@ -33,16 +29,16 @@ class Persona {
             try {
                 System.out.print("-- Nome: ");
                 nomeC = Ferramentas.truncarString(Ferramentas.seleccion()).toUpperCase();
-            } catch (Exception e) {
-                System.out.print("ERRO: ***" + e + "***");
+             } catch (Exception e) {
+                System.out.print("ERRO: *** " + e + " ***");
                 nomeC = Erros.errosCampoVacio();
-            }
-
-            try {
+            }  
+            
+            try {    
                 System.out.print("-- Apelidos: ");
                 apelidosC = Ferramentas.truncarString(Ferramentas.seleccion()).toUpperCase();
             } catch (Exception e) {
-                System.out.print("ERRO: ***" + e + "***");
+               System.out.print("ERRO: *** " + e + " ***"); 
                 apelidosC = Erros.errosCampoVacio();
             }
 
@@ -53,13 +49,14 @@ class Persona {
                 Erros.errosData();
                 dataC = "** Data non inicializada **";
             }
+            
             System.out.print("¿Confirmar cliente? (s/n): ");
             continuar = Ferramentas.seleccion();
 
         } while (!continuar.equals("s"));
 
         Persona persona = new Persona(nomeC, apelidosC, dataC);
-        System.out.println("Persona creada!\n" + persona);
+        System.out.println("Persona creada!: " + persona);
         return persona;
     }
 

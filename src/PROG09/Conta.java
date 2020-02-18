@@ -5,20 +5,17 @@
  */
 package PROG09;
 
-import static PROG09.ContaAforro.crearCAforro;
 
-/**
- *
- * @author Dregoth
- */
-public abstract class Conta implements Interfaz {
 
+
+public abstract class Conta {
+
+   // public static ArrayList<Conta> listadoConta = new ArrayList<Conta>();
+   // static ArrayList<Conta> listadoConta;
+    
     Persona persona;
     double saldo;
     NumeroCCC numCuenta;
-
-//    public abstract boolean crearNovaConta();
-//    public abstract void mostrarContas();
 
         
     public Conta(Persona persona, double saldo, NumeroCCC numCuenta) {
@@ -57,4 +54,5 @@ public abstract class Conta implements Interfaz {
         return "Conta{" + "persona=" + persona + ", saldo=" + saldo + ", numCuenta=" + numCuenta + '}';
     }
 
+    
 }

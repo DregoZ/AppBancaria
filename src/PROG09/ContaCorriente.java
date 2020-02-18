@@ -5,13 +5,6 @@
  */
 package PROG09;
 
-import java.util.Hashtable;
-import java.util.Scanner;
-
-/**
- *
- * @author Dregoth
- */
 public abstract class ContaCorriente extends Conta {
 
     Pagos entidadesAutorizadas;
@@ -19,36 +12,34 @@ public abstract class ContaCorriente extends Conta {
     public static void crearCC() throws Exception {
 
         String seleccion;
+        do {
 
-        System.out.println("\n---- Creando Conta CORRIENTE ----");
-        System.out.println("");
-        System.out.println("Elixa unha opción: ");
-        System.out.println("1. Crear conta PERSOAL.");
-        System.out.println("2. Crear conta EMPRESA.");
-        System.out.println("X. Volver.");
-        System.out.print("Selección: ");
-        seleccion = Ferramentas.seleccion();
-
-        while (!"1".equals(seleccion) && !"2".equals(seleccion) && !"x".equals(seleccion)) {
-            System.out.println("Selección incorrecta...");
+            System.out.println("\n---- Creando Conta CORRIENTE ----");
+            System.out.println("");
+            System.out.println("Elixa unha opción: ");
+            System.out.println("1. Crear conta PERSOAL.");
+            System.out.println("2. Crear conta EMPRESA.");
+            System.out.println("X. Volver.");
             System.out.print("Selección: ");
             seleccion = Ferramentas.seleccion();
-        }
 
-        switch (seleccion) {
-            case "1":
-                CCPersonal.crearCPersoal();
-                break;
-            case "2":
-                CCEmpresa.crearCEmpresa();
-                break;
-            case "x":
-                System.out.println("\nAtrás...\n");
-                Ferramentas.menu();
-                break;
-            default:
-                break;
-        }
+            switch (seleccion) {
+                case "1":
+                    CCPersonal.crearCPersoal();
+                    break;
+                case "2":
+                    CCEmpresa.crearCEmpresa();
+                    break;
+                default:
+                    break;
+            }
+
+        } while (!"x".equals(seleccion));
+
+        System.out.println("\nAtrás...\n");
+        
+        
+
     }
 
     //constructor, getters, setters

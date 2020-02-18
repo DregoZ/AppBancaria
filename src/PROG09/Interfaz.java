@@ -5,10 +5,7 @@
  */
 package PROG09;
 
-/**
- *
- * @author Dregoth
- */
+
 public interface Interfaz {
 
   

@@ -1,41 +1,23 @@
 package PROG09;
 
-import static PROG09.ContaAforro.crearCAforro;
-import static PROG09.ContaAforro.crearNovaConta;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Scanner;
 
 public class CCPersonal extends ContaCorriente {
 
-    protected static ArrayList<CCPersonal> listadoCPersonal = new ArrayList<CCPersonal>();
-
+    //protected static ArrayList<CCPersonal> listadoCPersonal = new ArrayList<CCPersonal>();
     double comisionMant; // personal
 
 // contas personales
-    protected static ArrayList<CCPersonal> listarPersonal() {
-        return listadoCPersonal;
+    protected static ArrayList<Conta> listarPersonal() {
+        return PROG09.listadoPersoal;
     }
 
     protected static void engadirPersonal(CCPersonal contaPersonal) {
-        listadoCPersonal.add(contaPersonal);
+        PROG09.listadoPersoal.add(contaPersonal);
 
     }
 
-    protected static void mostrarContas(ArrayList<CCPersonal> listadoCPersonal) {
-
-        System.out.println("\n-- Contas PERSONALES: ");
-        for (int i = 0; i < listadoCPersonal.size(); i++) {
-            System.out.println("Conta " + (i + 1) + ". ");
-            System.out.println(listadoCPersonal.get(i).getNumCuenta());
-            System.out.println(listadoCPersonal.get(i).getPersona());
-            System.out.println(listadoCPersonal.get(i).getSaldo());
-            System.out.println("");
-        }
-
-    }
-
-    public static boolean crearNovaConta() {
+    private static boolean crearNovaConta() {
         String resposta;
         System.out.print("Desexa introducir outra conta personal? ");
 
@@ -57,80 +39,54 @@ public class CCPersonal extends ContaCorriente {
 
         Persona persona;
         NumeroCCC numCuenta = null;
-        String resposta;
 
         //double comisionMant, Hashtable entidadesAutorizadas, Persona persona, double saldo, String numCuenta
-        System.out.println("---- Conta PERSOAL ----");
-        System.out.println("---- Introduce os datos ----");
-
         do {
+            System.out.println("---- Conta PERSOAL ----");
+            System.out.println("---- Introduce os datos ----");
+
             try {
                 numCuenta = NumeroCCC.crearCCC();
             } catch (Exception e) {
-                System.out.print(e.getMessage());
+                System.out.print("ERRO: *** " + e.getMessage() + " ***");
                 Erros.errosCC();
-
+                return;
             }
-        } while (numCuenta == null);
 
-        persona = Persona.crearPersoa();
+            persona = Persona.crearPersoa();
 
-        try {
-            System.out.print("\nSaldo total: ");
-            saldo = Ferramentas.seleccionNumeros();
-            if (saldo < 0 || saldo > 100000000) {
-                throw new Exception("O saldo debe comprender un número entre 0 e 100.000.000 (€).");
+            try {
+//                System.out.print("\nSaldo total: ");
+//                saldo = Ferramentas.seleccionNumeros();
+//                if (saldo < 0 || saldo > 100000000) {
+//                    throw new Exception("O saldo debe comprender un número entre 0 e 100.000.000 (€).");
+//                }
+                System.out.print("Comisión de mantemento: ");
+                comisionMant = Ferramentas.seleccionNumeros();
+                if (comisionMant < 0 || comisionMant > 20) {
+                    throw new Exception("A comisión de mantemento debe ser un número entre 0-20 (%)");
+                }
+            } catch (Exception e) {
+                System.out.print("ERRO: *** " + e.getMessage() + " ***");
+                comisionMant = 0;
+                Erros.errosDatosNumericos();
             }
-        } catch (Exception e) {
-            System.out.print("ERRO: ***" + e + "***");
-            saldo = 0;
-            Erros.errosDatosNumericos();
-        }
 
-        try {
-            System.out.print("Comisión de mantemento: ");
-            comisionMant = Ferramentas.seleccionNumeros();
-            if (comisionMant < 0 || comisionMant > 20) {
-                throw new Exception("A comisión de mantemento debe ser un número entre 0-20 (%)");
+            if (Pagos.engadirPagos()) {
+                entidadesAutorizadas = Pagos.crearEntidade();
+            } else {
+                entidadesAutorizadas = null;
             }
-        } catch (Exception e) {
-            System.out.print("ERRO: ***" + e + "***");
-            comisionMant = 0;
-            Erros.errosDatosNumericos();
-        }
 
-        if (Pagos.engadirPagos()) {
-            entidadesAutorizadas = Pagos.crearEntidade();
-        } else {
-            entidadesAutorizadas = null;
-        }
+            CCPersonal ccPersonal = new CCPersonal(comisionMant, entidadesAutorizadas, persona, saldo, numCuenta);
 
-        CCPersonal ccPersonal = new CCPersonal(comisionMant, entidadesAutorizadas, persona, saldo, numCuenta);
+            System.out.println("Conta creada: " + ccPersonal);
+            CCPersonal.engadirPersonal(ccPersonal);
+            System.out.println("");
+            PROG09.mostrarConta(PROG09.listadoPersoal, "PERSOAL");
 
-        System.out.println("Conta creada: " + ccPersonal);
-        CCPersonal.engadirPersonal(ccPersonal);
-        System.out.println("");
-        mostrarContas(listadoCPersonal);
-        
-        if (crearNovaConta()) {
-            crearCPersoal();
-        } else {
-            System.out.println("Volvendo ó menú principal...\n");
-            Ferramentas.menu();
-        }
-//        System.out.print("Desexa introducir outra conta personal? ");
-//
-//        do {
-//            System.out.print("(s/n)");
-//            resposta = Ferramentas.seleccion().toLowerCase();
-//        } while (!"s".equals(resposta) && !"n".equals(resposta));
-//
-//        if ("s".equals(resposta)) {
-//            crearCPersoal();
-//        } else {
-//            System.out.println("Volvendo ó menú principal...\n");
-//            Ferramentas.menu();
-//        }
+        } while (PROG09.crearNovaConta("PERSOAL") == true);
+        System.out.println("Volvendo ó menú anterior...\n");
 
     }
 
